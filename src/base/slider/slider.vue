@@ -49,6 +49,8 @@ export default {
         this._play()
       }
     }, 20)
+
+    // 监听浏览器窗口的改变
     window.addEventListener('resize', () => {
       if (!this.slider) {
         return
@@ -60,9 +62,9 @@ export default {
   methods: {
     _setSliderWidth (isResize) {
       this.children = this.$refs.sliderGroup.children
-
-      let width = 0
       let sliderWidth = this.$refs.slider.clientWidth
+      let width = 0
+
       for (let i = 0; i < this.children.length; i++) {
         let child = this.children[i]
         addClass(child, 'slider-item')
@@ -122,7 +124,7 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-@import 'common/sass/variable.sass'
+@import 'common/sass/variable'
 .slider
   min-height: 1px
   .slider-group

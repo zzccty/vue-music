@@ -99,7 +99,7 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-  @import "common/sass/variable.sass"
+  @import "common/sass/variable"
   .recommend
     position: fixed
     width: 100%

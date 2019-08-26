@@ -1,10 +1,10 @@
 var express = require('express')
 var compression = require('compression')
-var config = require('./config/index')
+// var config = require('./config/index')
 var axios = require('axios')
 const bodyParser = require('body-parser')
 
-var port = process.env.PORT || config.build.port
+var port = process.env.PORT || 8080
 
 var app = express()
 
