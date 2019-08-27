@@ -14,7 +14,8 @@
         <ul>
           <li v-for="(item,index) in group.items"
               :key="index"
-              class="list-group-item">
+              class="list-group-item"
+              @click="selectItem(item)">
             <img v-lazy="item.avatar"
                  class="avatar">
             <span class="name">{{item.name}}</span>
@@ -50,13 +51,16 @@
 <script>
 import Scroll from 'base/scroll/scroll'
 import { getData } from 'common/js/dom'
-import { setTimeout } from 'timers'
 import Loading from 'base/loading/loading'
+
 const ANCHOR_HEIGHT = 18
 const TITLE_HEIGHT = 30
+
 export default {
   created () {
+    // 保存touch对象
     this.touch = {}
+    // 开启scroll监听滚动
     this.listenScroll = true
     this.listHeight = []
     this.probeType = 3
@@ -88,11 +92,20 @@ export default {
     }
   },
   methods: {
+    selectItem (item) {
+      // 派发selectItem事件给父组件用于获取歌手信息
+      this.$emit('selectItem', item)
+    },
     onShortcutTouchStart (e) {
+      // 获取当前触摸元素的data-index值
       let anchorIndex = getData(e.target, 'index')
+      // 获取第一次触摸的元素
       let firstTouch = e.touches[0]
+      // 第一次触摸的元素的Y轴方向距离
       this.touch.y1 = firstTouch.pageY
+      // 保存当前元素的data-index值到touch对象
       this.touch.anchorIndex = anchorIndex
+      // 滚动到相应的位置
       this._scrollTo(anchorIndex)
     },
     onShortcutTouchMove (e) {
@@ -100,10 +113,12 @@ export default {
       this.touch.y2 = firstTouch.pageY
       // y轴上的偏移多少个锚点
       let delta = (this.touch.y2 - this.touch.y1) / ANCHOR_HEIGHT | 0
+      // 因为this.touch.anchorIndex获取到的是一个String,所以需要parseInt
       let anchorIndex = parseInt(this.touch.anchorIndex) + delta
       this._scrollTo(anchorIndex)
     },
     scroll (pos) {
+      // 获取Y轴方向上的滚动距离
       this.scrollY = pos.y
     },
     _scrollTo (index) {
@@ -113,16 +128,19 @@ export default {
       if (index < 0) {
         index = 0
       } else if (index > this.listHeight.length - 2) {
-        index = this.listHeight.length - 2
+        index = this.listHeight.length - 2 // 22
       }
       this.scrollY = -this.listHeight[index]
       // console.log(this.scrollY)
       this.$refs.listview.scrollToElement(this.$refs.listGroup[index], 0)
     },
+    // 计算每一层列表的高度.并保存到this.listHeight
     _calculateHight () {
-      this.listHeight = []
+      // this.listHeight = []
+      // 获取所有的列表层
       const list = this.$refs.listGroup
       let height = 0
+      // 默认第一层高度为0
       this.listHeight.push(height)
       for (let i = 0; i < list.length; i++) {
         let item = list[i]
@@ -137,14 +155,16 @@ export default {
         this._calculateHight()
       }, 20)
     },
+    // 监听Y轴方向上滚动的距离
     scrollY (newY) {
       const listHeight = this.listHeight
+      // console.log(newY)
       // 当滚动到顶部，newY>0
       if (newY > 0) {
         this.currentIndex = 0
         return
       }
-      // 在中间部分滚动
+      // 在中间部分滚动,因为获取到的listHight多加了一层为0的列表,所以中间层为 listHeight.length - 1
       for (let i = 0; i < listHeight.length - 1; i++) {
         let height1 = listHeight[i]
         let height2 = listHeight[i + 1]
@@ -199,7 +219,7 @@ export default {
         border-radius: 50%
       .name
         margin-left: 20px
-        color: $color-text-l
+        color: $color-text-ll
         font-size: $font-size-medium
   .list-shortcut
     position: absolute
@@ -212,7 +232,6 @@ export default {
     border-radius: 10px
     text-align: center
     background: $color-background-d
-    font-family: Helvetica
     .item
       padding: 3px
       line-height: 1

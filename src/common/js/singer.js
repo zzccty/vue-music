@@ -1,3 +1,4 @@
+// 针对Singer列表项的id,name,avatar进行封装
 export default class Singer {
   constructor ({
     id,

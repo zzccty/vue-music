@@ -10,6 +10,7 @@ import BScroll from 'better-scroll'
 export default {
   props: {
     probeType: {
+      // 滚动的具体时机
       type: Number,
       default: 1
     },
@@ -22,6 +23,7 @@ export default {
       default: null
     },
     listenScroll: {
+      // 是否开启scroll滚动监听
       type: Boolean,
       default: false
     }
@@ -40,10 +42,12 @@ export default {
         probeType: this.probeType,
         click: this.click
       })
-
+      // 如果开启scroll滚动监听,则向父组件触发scroll事件
       if (this.listenScroll) {
         let me = this
+
         this.scroll.on('scroll', (pos) => {
+          // pos:滚动的实时坐标
           me.$emit('scroll', pos)
         })
       }
