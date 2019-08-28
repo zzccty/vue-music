@@ -4,7 +4,7 @@
   @media (-webkit-min-device-pixel-ratio: 3),(min-device-pixel-ratio: 3)
     background-image: url($url + "@3x.png")
 
-@mixin no-wrap 
+@mixin no-wrap
   text-overflow: ellipsis
   overflow: hidden
   white-space: nowrap
@@ -18,3 +18,19 @@
     left: -10px
     right: -10px
     bottom: -10px
+
+@mixin keyframes($animationName) 
+    @-webkit-keyframes #{$animationName} 
+        @content;
+    
+    @-moz-keyframes #{$animationName} 
+        @content;
+    
+    @-o-keyframes #{$animationName} 
+        @content;
+  
+    @keyframes #{$animationName} 
+        @content;
+    
+
+

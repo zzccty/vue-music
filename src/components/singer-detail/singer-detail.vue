@@ -48,7 +48,7 @@ export default {
           //  processSongUrl 对歌曲列表做处理
           processSongUrl(this._normalizeSongs(res.data.list)).then(songs => {
             this.songs = songs
-            console.log(this.songs)
+            // console.log(this.songs)
           })
         }
       })

@@ -135,6 +135,7 @@ export default {
       float: left
       box-sizing: border-box
       overflow: hidden
+      border-radius: 5px
       text-align: center
       a
         display: block
@@ -144,6 +145,7 @@ export default {
       img
         display: block
         width: 100%
+        overflow: hidden
   .dots
     position: absolute
     right: 0

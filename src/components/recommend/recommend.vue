@@ -100,6 +100,7 @@ export default {
 
 <style lang="sass" scoped>
   @import "common/sass/variable"
+  @import "common/sass/mixin"
   .recommend
     position: fixed
     width: 100%
@@ -111,6 +112,7 @@ export default {
       .slider-wrapper
         position: relative
         width: 100%
+        border-radius: 5px
         overflow: hidden
       .recommend-list
         .list-title
@@ -141,6 +143,7 @@ export default {
               color: $color-text
             .desc
               color: $color-text-d
+              @include no-wrap
       .loading-container
         position: absolute
         width: 100%
