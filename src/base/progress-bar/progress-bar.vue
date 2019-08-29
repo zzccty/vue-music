@@ -25,11 +25,6 @@ const progressBtnWidth = 16
 const transform = prefixStyle('transform')
 
 export default {
-  computed: {
-    ...mapGetters([
-      'playing'
-    ])
-  },
   props: {
     percent: {
       type: Number,
@@ -39,51 +34,66 @@ export default {
   created () {
     this.touch = {}
   },
+  computed: {
+    ...mapGetters([
+      'playing'
+    ])
+  },
   methods: {
     progressTouchStart (e) {
-      this.touch.initated = true
+      this.touch.initiated = true
       this.touch.startX = e.touches[0].pageX
       this.touch.left = this.$refs.progress.clientWidth
     },
     progressTouchMove (e) {
-      if (!this.touch.initated) {
+      if (!this.touch.initiated) {
         return
       }
+      const deltaX = e.touches[0].pageX - this.touch.startX
+      const offsetWidth = Math.min(this.$refs.progressBar.clientWidth - progressBtnWidth, Math.max(0, this.touch.left + deltaX))
+      this._offset(offsetWidth)
       if (this.playing) {
         this.setPlayingState(!this.playing)
       }
-      const daltaX = e.touches[0].pageX - this.touch.startX
-      const offsetWidth = Math.min(this.$refs.progressBar.clientWidth - progressBtnWidth, Math.max(0, this.touch.left + daltaX))
-      this._offset(offsetWidth)
+      this.$emit('percentChanging', this._getPercent())
     },
-    progressTouchEnd (e) {
-      this.touch.initated = false
+    progressTouchEnd () {
+      this.touch.initiated = false
       this._triggerPercent()
     },
     progressClick (e) {
-      this._offset(e.offsetX)
+      const rect = this.$refs.progressBar.getBoundingClientRect()
+      const offsetWidth = e.pageX - rect.left
+      this._offset(offsetWidth)
+      // 这里当我们点击 progressBtn 的时候，e.offsetX 获取不对
+      // this._offset(e.offsetX)
       this._triggerPercent()
+    },
+    setProgressOffset (percent) {
+      if (percent >= 0 && !this.touch.initiated) {
+        const barWidth = this.$refs.progressBar.clientWidth - progressBtnWidth
+        const offsetWidth = percent * barWidth
+        this._offset(offsetWidth)
+      }
+    },
+    _triggerPercent () {
+      this.$emit('percentChange', this._getPercent())
     },
     _offset (offsetWidth) {
       this.$refs.progress.style.width = `${offsetWidth}px`
       this.$refs.progressBtn.style[transform] = `translate3d(${offsetWidth}px,0,0)`
     },
-    _triggerPercent () {
+    _getPercent () {
       const barWidth = this.$refs.progressBar.clientWidth - progressBtnWidth
-      const percent = this.$refs.progress.clientWidth / barWidth
-      this.$emit('percentChange', percent)
+      return this.$refs.progress.clientWidth / barWidth
     },
     ...mapMutations({
-      'setPlayingState': 'SET_PLAYING_STATE'
+      setPlayingState: 'SET_PLAYING_STATE'
     })
   },
   watch: {
     percent (newPercent) {
-      if (newPercent >= 0 && !this.touch.initated) {
-        const barWidth = this.$refs.progressBar.clientWidth - progressBtnWidth
-        const offsetWidth = newPercent * barWidth
-        this._offset(offsetWidth)
-      }
+      this.setProgressOffset(newPercent)
     }
   }
 }

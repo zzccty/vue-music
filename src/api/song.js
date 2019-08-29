@@ -11,6 +11,7 @@ import {
 
 const debug = process.env.NODE_ENV !== 'production'
 
+// 获取歌词
 export function getLyric (mid) {
   const url = debug ? '/api/lyric' : 'http://ustbhuangyi.com/music/api/lyric'
 

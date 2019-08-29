@@ -56,7 +56,7 @@ module.exports = {
             host: 'c.y.qq.com'
           },
           params: req.query
-        }).then((response) => {
+        }).then((response) => { 
           let ret = response.data
           if (typeof ret === 'string') {
             const reg = /^\w+\(({.+})\)$/
