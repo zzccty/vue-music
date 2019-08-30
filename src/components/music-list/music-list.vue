@@ -34,7 +34,8 @@
             @scroll="scroll">
       <div class="song-list-wrapper">
         <song-list :songs="songs"
-                   @select="selectItem">
+                   @select="selectItem"
+                   :rank="rank">
         </song-list>
       </div>
       <div class="loading-container"
@@ -76,6 +77,10 @@ export default {
     title: {
       type: String,
       default: ''
+    },
+    rank: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {

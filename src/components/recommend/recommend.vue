@@ -5,36 +5,37 @@
             class="recommend-content"
             :data="discList">
       <div>
-        <div class="slider-wrapper"
-             v-if="recommends.length">
-          <slider>
-            <div v-for="item in recommends"
-                 :key="item.id">
-              <a :href="item.linkUrl">
-                <img @load="loadImage"
-                     :src="item.picUrl">
-              </a>
-            </div>
-          </slider>
+        <div v-if="recommends.length"
+             class="slider-wrapper">
+          <div class="slider-content">
+            <slider ref="slider">
+              <div v-for="(item,index) in recommends"
+                   :key="index">
+                <a :href="item.linkUrl">
+                  <img @load="loadImage"
+                       :src="item.picUrl">
+                </a>
+              </div>
+            </slider>
+          </div>
         </div>
         <div class="recommend-list">
           <h1 class="list-title">热门歌单推荐</h1>
           <ul>
-            <li v-for="(item,index) in discList"
-                :key="index"
-                class="item">
+            <li @click="selectItem(item)"
+                v-for="(item,index) in discList"
+                class="item"
+                :key="index">
               <div class="icon">
-                <img v-lazy="item.imgurl"
-                     width="60"
-                     height="60">
+                <img width="60"
+                     height="60"
+                     v-lazy="item.imgurl">
               </div>
               <div class="text">
                 <h2 class="name"
-                    v-html="item.creator.name">
-                </h2>
+                    v-html="item.creator.name"></h2>
                 <p class="desc"
-                   v-html="item.dissname">
-                </p>
+                   v-html="item.dissname"></p>
               </div>
             </li>
           </ul>
@@ -45,16 +46,18 @@
         <loading></loading>
       </div>
     </scroll>
+    <router-view></router-view>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import Slider from 'base/slider/slider'
-import Scroll from 'base/scroll/scroll'
 import Loading from 'base/loading/loading'
+import Scroll from 'base/scroll/scroll'
 import { getRecommend, getDiscList } from 'api/recommend'
-import { ERR_OK } from 'api/config'
 import { playlistMixin } from 'common/js/mixin'
+import { ERR_OK } from 'api/config'
+import { mapMutations } from 'vuex'
 
 export default {
   mixins: [playlistMixin],
@@ -66,13 +69,34 @@ export default {
   },
   created () {
     this._getRecommend()
+
     this._getDiscList()
+  },
+  activated () {
+    setTimeout(() => {
+      this.$refs.slider && this.$refs.slider.refresh()
+    }, 20)
   },
   methods: {
     handlePlaylist (playlist) {
       const bottom = playlist.length > 0 ? '60px' : ''
+
       this.$refs.recommend.style.bottom = bottom
       this.$refs.scroll.refresh()
+    },
+    loadImage () {
+      if (!this.checkloaded) {
+        this.checkloaded = true
+        setTimeout(() => {
+          this.$refs.scroll.refresh()
+        }, 20)
+      }
+    },
+    selectItem (item) {
+      this.$router.push({
+        path: `/recommend/${item.dissid}`
+      })
+      this.setDisc(item)
     },
     _getRecommend () {
       getRecommend().then((res) => {
@@ -82,33 +106,27 @@ export default {
       })
     },
     _getDiscList () {
-      getDiscList().then(res => {
+      getDiscList().then((res) => {
         if (res.code === ERR_OK) {
           this.discList = res.data.list
         }
       })
     },
-    loadImage () {
-      // 逻辑执行一次
-      if (!this.checkLoaded) {
-        setTimeout(() => {
-          this.$refs.scroll.refresh()
-        }, 20)
-        this.checkLoaded = true
-      }
-    }
+    ...mapMutations({
+      setDisc: 'SET_DISC'
+    })
   },
   components: {
     Slider,
-    Scroll,
-    Loading
+    Loading,
+    Scroll
   }
 }
 </script>
 
 <style lang="sass" scoped>
   @import "common/sass/variable"
-  @import "common/sass/mixin"
+
   .recommend
     position: fixed
     width: 100%
@@ -120,8 +138,15 @@ export default {
       .slider-wrapper
         position: relative
         width: 100%
-        border-radius: 5px
+        height: 0
+        padding-top: 40%
         overflow: hidden
+        .slider-content
+          position: absolute
+          top: 0
+          left: 0
+          width: 100%
+          height: 100%
       .recommend-list
         .list-title
           height: 65px
@@ -151,7 +176,6 @@ export default {
               color: $color-text
             .desc
               color: $color-text-d
-              @include no-wrap
       .loading-container
         position: absolute
         width: 100%

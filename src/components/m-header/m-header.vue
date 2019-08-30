@@ -1,7 +1,7 @@
 <template>
   <div class="m-header">
     <div class="icon"></div>
-    <h1 class="text">Chicken Music</h1>
+    <h1 class="text">YeeLei Music</h1>
     <a href="#"
        class="mine">
       <i class="icon-mine"></i>
@@ -36,6 +36,7 @@ export default {}
       vertical-align: top
       line-height: 44px
       font-size: $font-size-large
+      letter-spacing: 3px
     .mine
       position: absolute
       top: 0

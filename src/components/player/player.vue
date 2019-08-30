@@ -613,7 +613,7 @@ export default {
             .playing-lyric
               height: 20px
               line-height: 20px
-              font-size: $font-size-medium
+              font-size: $font-size-medium-x
               color: $color-text-l
         .middle-r
           display: inline-block
@@ -629,7 +629,7 @@ export default {
             .text
               line-height: 32px
               color: $color-text-l
-              font-size: $font-size-medium
+              font-size: $font-size-medium-x
               &.current
                 color: $color-text
             .pure-music

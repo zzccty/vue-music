@@ -103,6 +103,12 @@ export default {
         }
       })
     },
+    refresh () {
+      if (this.slider) {
+        this._setSliderWidth(true)
+        this.slider.refresh()
+      }
+    },
     _onScrollEnd () {
       let pageIndex = this.slider.getCurrentPage().pageX
       this.currentPageIndex = pageIndex
