@@ -1,5 +1,6 @@
 <template>
-  <div class="rank" ref="rank">
+  <div class="rank"
+       ref="rank">
     <scroll class="toplist"
             :data="toplist"
             ref="toplist">
@@ -24,7 +25,8 @@
           </ul>
         </li>
       </ul>
-      <div class="loading-container" v-show="!toplist.length">
+      <div class="loading-container"
+           v-show="!toplist.length">
         <loading></loading>
       </div>
     </scroll>
@@ -70,7 +72,6 @@ export default {
       getTopList().then(res => {
         if (res.code === ERR_OK) {
           this.toplist = res.data.topList
-          console.log(this.toplist)
         }
       })
     },
