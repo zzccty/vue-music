@@ -8,7 +8,8 @@
         <div class="rank"
              v-show="rank">
           <span :class="getRankCls(index)"
-                v-text="getRankText(index)"></span>
+                v-text="getRankText(index)">
+          </span>
         </div>
         <div class="content">
           <h2 class="name">{{song.name}}</h2>

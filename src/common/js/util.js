@@ -3,6 +3,8 @@ function getRandomInt (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
+// util主要是保存一些工具类
+
 // 重新洗牌歌单
 export function shuffle (arr) {
   let _arr = arr.slice()

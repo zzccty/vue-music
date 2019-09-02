@@ -7,6 +7,7 @@ import axios from 'axios'
 
 const debug = process.env.NODE_ENV !== 'production'
 
+// 获取热门歌曲、歌手关键字
 export function getHotKey () {
   const url = 'https://c.y.qq.com/splcloud/fcgi-bin/gethotkey.fcg'
 
@@ -18,6 +19,7 @@ export function getHotKey () {
   return jsonp(url, data, options)
 }
 
+// 获取搜索查询结果
 export function search (query, page, zhida, perpage) {
   const url = debug ? '/api/search' : 'http://ustbhuangyi.com/music/api/search'
 

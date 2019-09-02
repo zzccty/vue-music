@@ -10,8 +10,10 @@
          ref="shortcutWrapper">
       <scroll class="shortcut"
               :data="shortcut"
-              ref="shortcut">
+              ref="shortcut"
+              :refreshDelay="refreshDelay">
         <div>
+          <!-- 热门搜索 -->
           <div class="hot-key">
             <h1 class="title">热门搜索</h1>
             <ul>
@@ -23,6 +25,7 @@
               </li>
             </ul>
           </div>
+          <!-- 搜索历史 -->
           <div class="search-history"
                v-show="searchHistory.length">
             <h1 class="title">
@@ -40,6 +43,7 @@
         </div>
       </scroll>
     </div>
+    <!-- 搜索结果 -->
     <div class="search-result"
          v-show="query"
          ref="searchResult">
@@ -66,43 +70,29 @@ import Confirm from 'base/confirm/confirm'
 import Scroll from 'base/scroll/scroll'
 import { getHotKey } from 'api/search'
 import { ERR_OK } from 'api/config'
-import { mapActions, mapGetters } from 'vuex'
-import { playlistMixin } from 'common/js/mixin'
+import { mapActions } from 'vuex'
+import { playlistMixin, searchMixin } from 'common/js/mixin'
 export default {
-  mixins: [playlistMixin],
+  mixins: [playlistMixin, searchMixin],
   data () {
     return {
-      hotKey: [],
-      query: ''
+      hotKey: []
     }
   },
   computed: {
     shortcut () {
       return this.hotKey.concat(this.searchHistory)
-    },
-    ...mapGetters([
-      'searchHistory'
-    ])
+    }
   },
   created () {
     this._getHotKey()
   },
   methods: {
-    addQuery (query) {
-      this.$refs.searchBox.setQuery(query)
-    },
-    onQueryChange (query) {
-      this.query = query
-    },
-    blurInput () {
-      this.$refs.searchBox.blur()
-    },
-    saveSearch () {
-      this.saveSearchHistory(this.query)
-    },
+    // 删除选中的一条搜索历史数据
     deleteOne (item) {
       this.deleteSearchHistory(item)
     },
+    // 删除所有的搜索历史数据
     deleteAll () {
       this.clearSearchHistory()
     },
@@ -110,7 +100,7 @@ export default {
       this.$refs.confirm.show()
     },
     handlePlaylist (playlist) {
-      const bottom = playlist ? '60px' : ''
+      const bottom = playlist.length ? '60px' : ''
       this.$refs.shortcutWrapper.style.bottom = bottom
       this.$refs.shortcut.refresh()
 
@@ -125,8 +115,6 @@ export default {
       })
     },
     ...mapActions([
-      'saveSearchHistory',
-      'deleteSearchHistory',
       'clearSearchHistory'
     ])
   },
@@ -182,7 +170,7 @@ export default {
             border-radius: 99px
             background: $color-highlight-background
             font-size: $font-size-medium
-            color: $color-text-d
+            color: $color-text-l
         .search-history
           position: relative
           margin: 0 20px
@@ -191,7 +179,7 @@ export default {
             align-items: center
             height: 40px
             font-size: $font-size-medium
-            color: $color-text-l
+            color: $color-theme
             .text
               flex: 1
             .clear

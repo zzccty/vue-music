@@ -5,8 +5,8 @@
                       tag="ul">
       <li v-for="item in searches"
           :key="item"
-          class="search-item"
-          @click="selectItem(item)">
+          @click="selectItem(item)"
+          class="search-item">
         <span class="text">{{item}}</span>
         <span class="icon"
               @click.stop="deleteOne(item)">

@@ -7,7 +7,8 @@
            ref="query" />
     <i class="icon-dismiss"
        v-show="query"
-       @click="clear"></i>
+       @click="clear">
+    </i>
   </div>
 </template>
 
@@ -38,7 +39,7 @@ export default {
     }
   },
   created () {
-    // 监听query变化,向外派发query事件
+    // 监听query变化,向外派发query事件,利用debounce函数处理消抖
     this.$watch('query', debounce((newQuery) => {
       this.$emit('query', newQuery)
     }, 200))
@@ -73,5 +74,5 @@ export default {
         color: $color-text-d
     .icon-dismiss
       font-size: 16px
-      color: $color-background
+      color: #555
 </style>

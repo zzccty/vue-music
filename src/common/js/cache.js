@@ -1,53 +1,83 @@
 // 操作localstorage存储数据
 import storage from 'good-storage'
 
-const SEARCHKEY = '__search__'
+// 定义搜索历史key值及最大长度
+const SEARCH_KEY = '__search__'
 const SEARCH_MAX_LENGTH = 15
 
+// 定义播放历史key值及最大长度
+const PLAY_KEY = '__play__'
+const PLAY_MAX_LENGTH = 200
+
 function insertArray (arr, val, compare, maxLen) {
+  // 通过比较方法找到当前索引
   const index = arr.findIndex(compare)
   if (index === 0) {
     return
   }
   if (index > 0) {
-    arr.slice(index, 1)
+    // 存在当前搜索内容,删除
+    arr.splice(index, 1)
   }
+  // 从数组的头部开始插入
   arr.unshift(val)
+  // 如果数组的长度大于规定的长度限度,则从尾部开始删除
   if (maxLen && arr.length > maxLen) {
     arr.pop()
   }
 }
 
-function delectFromArray (arr, compare) {
+function deleteFromArray (arr, compare) {
   const index = arr.findIndex(compare)
   if (index > -1) {
     arr.splice(index, 1)
   }
 }
 
+// 保存搜索历史
 export function saveSearch (query) {
-  let searches = storage.get(SEARCHKEY, [])
+  // 先获取localstorage中的SEARCH_KEY的数据
+  let searches = storage.get(SEARCH_KEY, [])
+  // 插入数据到searches数组中
   insertArray(searches, query, (item) => {
     return item === query
   }, SEARCH_MAX_LENGTH)
-  storage.set(SEARCHKEY, searches)
+  // 将searches数组保存到SEARCH_KEY
+  storage.set(SEARCH_KEY, searches)
   return searches
 }
 
+// 从localstorage中获取SEARCH_KEY搜索历史数据
 export function loadSearch () {
-  return storage.get(SEARCHKEY, [])
+  return storage.get(SEARCH_KEY, [])
 }
 
+// 删除选中的搜索历史数据
 export function deleteSearch (query) {
-  let searches = storage.get(SEARCHKEY, [])
-  delectFromArray(searches, (item) => {
+  let searches = storage.get(SEARCH_KEY, [])
+  deleteFromArray(searches, (item) => {
     return item === query
   })
-  storage.set(SEARCHKEY, searches)
+  storage.set(SEARCH_KEY, searches)
   return searches
 }
 
+// 清空所有历史数据
 export function clearSearch () {
-  storage.remove(SEARCHKEY)
+  storage.remove(SEARCH_KEY)
   return []
+}
+
+// 保存当前播放歌曲信息到localstorage
+export function savePlay (song) {
+  let songs = storage.get(PLAY_KEY, [])
+  insertArray(songs, song, (item) => {
+    return item.id === song.id
+  }, PLAY_MAX_LENGTH)
+  storage.set(PLAY_KEY, songs)
+  return songs
+}
+
+export function loadPlay () {
+  return storage.get(PLAY_KEY, [])
 }

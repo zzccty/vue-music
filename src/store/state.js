@@ -2,7 +2,8 @@ import {
   playMode
 } from 'common/js/config'
 import {
-  loadSearch
+  loadSearch,
+  loadPlay
 } from 'common/js/cache'
 
 const state = {
@@ -12,10 +13,11 @@ const state = {
   playlist: [], // 播放列表
   sequenceList: [], // 顺序播放列表
   mode: playMode.sequence, // 播放模式
-  currentIndex: -1, // 歌曲播放索引
+  currentIndex: -1, // 播放列表当前播放歌曲的索引
   disc: {},
   topList: {}, // 排行榜歌单
-  searchHistory: loadSearch()
+  searchHistory: loadSearch(), // 搜索历史
+  playHistory: loadPlay() // 播放历史
 }
 
 export default state
