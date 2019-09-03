@@ -1,8 +1,7 @@
-// 背景图片
 @mixin bg-image($url)
-  background: url($url + "@2x.png")
+  background-image: url($url + "@2x.png")
   @media (-webkit-min-device-pixel-ratio:3),(min-device-pixe-ratio:3)
-  background: url($url + "@3x.png")
+    background-image: url($url + "@3x.png")
 
 @mixin no-wrap
   text-overflow: ellipsis
