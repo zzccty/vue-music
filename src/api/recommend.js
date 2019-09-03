@@ -7,6 +7,7 @@ import axios from 'axios'
 
 const debug = process.env.NODE_ENV !== 'production'
 
+// 轮播图
 export function getRecommend () {
   const url = 'https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg'
   const data = Object.assign({}, commonParams, {
@@ -17,9 +18,10 @@ export function getRecommend () {
   return jsonp(url, data, options)
 }
 
+// 推荐歌单列表
 export function getDiscList () {
   // 线上环境地址,根据自己的需要配置修改
-  const url = debug ? '/api/getDiscList' : 'http:/localhost:9000/api/getDiscList'
+  const url = debug ? '/api/getDiscList' : 'http://ittext.cn/music/api/getDiscList'
   const data = Object.assign({}, commonParams, {
     platform: 'h5',
     hostUin: 0,
@@ -38,8 +40,9 @@ export function getDiscList () {
   })
 }
 
+// 推荐歌单歌曲列表
 export function getSongList (disstid) {
-  const url = debug ? '/api/getCdInfo' : 'http://ustbhuangyi.com/music/api/getDiscList'
+  const url = debug ? '/api/getCdInfo' : 'http://ittext.cn/music/api/getCdInfo'
 
   const data = Object.assign({}, commonParams, {
     disstid,
