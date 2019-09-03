@@ -3,7 +3,8 @@ import {
 } from 'common/js/config'
 import {
   loadSearch,
-  loadPlay
+  loadPlay,
+  loadFavorite
 } from 'common/js/cache'
 
 const state = {
@@ -17,7 +18,8 @@ const state = {
   disc: {},
   topList: {}, // 排行榜歌单
   searchHistory: loadSearch(), // 搜索历史
-  playHistory: loadPlay() // 播放历史
+  playHistory: loadPlay(), // 播放历史
+  favoriteList: loadFavorite() // 我喜欢的
 }
 
 export default state

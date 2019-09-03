@@ -1,17 +1,16 @@
 var express = require('express')
 var compression = require('compression')
-// var config = require('./config/index')
 var axios = require('axios')
 const bodyParser = require('body-parser')
 
-var port = process.env.PORT || 8080
+var port = process.env.PORT || 9000
 
 var app = express()
 
 var apiRoutes = express.Router()
 
 apiRoutes.get('/getDiscList', function (req, res) {
-  var url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
+  const url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
   axios.get(url, {
     headers: {
       referer: 'https://c.y.qq.com/',

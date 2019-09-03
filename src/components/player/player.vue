@@ -98,7 +98,9 @@
                  @click="next"></i>
             </div>
             <div class="icon i-right">
-              <i class="icon-not-favorite"></i>
+              <i class="icon"
+                 :class="getFavoriteIcon(currentSong)"
+                 @click="toggleFavorite(currentSong)"></i>
             </div>
           </div>
         </div>
@@ -144,7 +146,7 @@
     <play-list ref="playList"></play-list>
     <audio :src="currentSong.url"
            ref="audio"
-           @canplay="ready"
+           @playing="ready"
            @error="error"
            @timeupdate="updateTime"
            @ended="end"
@@ -297,6 +299,7 @@ export default {
       }
     },
     end () {
+      // 如果为循环播放
       if (this.mode === playMode.loop) {
         this.loop()
       } else {
@@ -312,9 +315,10 @@ export default {
       }
     },
     ready () {
+      // 监听 playing 这个事件可以确保慢网速或者快速切换歌曲导致的 DOM Exception
       this.songReady = true
       // 如果歌曲的播放晚于歌词的出现，播放的时候需要同步歌词
-      if (this.currentLyric && !this.isPureMusic) {
+      if (this.currentLyric) {
         this.currentLyric.seek(this.currentTime * 1000)
       }
       // 保存当前播放歌曲到播放历史中
@@ -327,7 +331,8 @@ export default {
       }
     },
     error () {
-
+      clearTimeout(this.timertimer)
+      this.songReady = true
     },
     updateTime (e) {
       this.currentTime = e.target.currentTime
@@ -355,6 +360,10 @@ export default {
     },
     getLyric () {
       this.currentSong.getLyric().then((lyric) => {
+        // 如果这首歌的歌词不等于获取到的歌词
+        if (this.currentSong.lyric !== lyric) {
+          return
+        }
         this.currentLyric = new Lyric(lyric, this.handleLyric)
         if (this.playing) {
           this.currentLyric.play()
@@ -466,6 +475,7 @@ export default {
       if (newSong.id === oldSong.id || !newSong.id || !newSong.url) {
         return
       }
+      // 如果歌词已经加载
       if (this.currentLyric) {
         this.currentLyric.stop()
         // 重置为null
@@ -475,12 +485,14 @@ export default {
         this.currentLineNum = 0
       }
       this.$refs.audio.src = newSong.url
-      // audio组件渲染完毕之后调用play
-      setTimeout(() => {
+
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
         this.$refs.audio.play()
-      }, 800)
+      }, 1000)
       this.getLyric()
     },
+    // 监听playing状态,控制audio播放状态
     playing (newPlaying) {
       if (!this.songReady) {
         return

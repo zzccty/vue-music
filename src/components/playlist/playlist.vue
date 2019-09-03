@@ -32,8 +32,9 @@
                  :class="getCurrentIcon(item)"></i>
               <span class="text"
                     v-html="item.name"></span>
-              <span class="like">
-                <i class="icon-favorite"></i>
+              <span class="like"
+                    @click.stop="toggleFavorite(item)">
+                <i :class="getFavoriteIcon(item)"></i>
               </span>
               <span @click.stop="deleteOne(item)"
                     class="delete">
