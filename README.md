@@ -11,7 +11,7 @@
 - `vuex`：Vue 集中状态管理，在多个组件共享某些状态时非常便捷
 - `vue-lazyload`：实现图片懒加载，节省用户流量，优化页面加载速度
 - `better-scroll`：解决移动端各种滚动场景需求的插件，使移动端滑动体验更加流畅
-- `SCSS`：css 预编译处理器
+- `Sass`：css 预编译处理器
 - `ES6`：ECMAScript 新一代语法，模块化、解构赋值、Promise、Class 等方法非常好用
 
 【后端】
@@ -22,10 +22,10 @@
 
 【自动化构建工具】
 
-- webpack: 项目编译打包工具
-- vue-cl3: Vue 脚手架工具, 可快速搭建项目
-- eslint: 代码风格检查工具, 规范代码格式
-- vConsole: 移动端调试工具, 在移动端输出日志
+- `webpack`: 项目编译打包工具
+- `vue-cl3`: Vue 脚手架工具, 可快速搭建项目
+- `eslint`: 代码风格检查工具, 规范代码格式
+- `vConsole`: 移动端调试工具, 在移动端输出日志
 
 ## 收获
 
@@ -41,7 +41,7 @@
 
 ## 项目演示地址
 
-:yum: 项目演示地址：[移动端音乐 WebApp](http://yeelei.top/music)，或者可以扫描二维码访问：
+:yum: 项目演示地址：[移动端音乐 WebApp](http://www.yeelei.top/music)，或者可以扫描二维码访问：
 
 ![](./doc/erweima.png)
 
