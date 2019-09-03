@@ -13,7 +13,7 @@ const debug = process.env.NODE_ENV !== 'production'
 
 // 获取歌词
 export function getLyric (mid) {
-  const url = debug ? '/api/lyric' : 'http://ittext.cn/music/api/lyric'
+  const url = debug ? '/api/lyric' : 'http://localhost:9000/api/lyric'
 
   const data = Object.assign({}, commonParams, {
     songmid: mid,

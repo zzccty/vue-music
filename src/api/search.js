@@ -21,7 +21,7 @@ export function getHotKey () {
 
 // 获取搜索查询结果
 export function search (query, page, zhida, perpage) {
-  const url = debug ? '/api/search' : 'http://ittext.cn/music/api/search'
+  const url = debug ? '/api/search' : 'http://localhost:9000/api/search'
 
   const data = Object.assign({}, commonParams, {
     w: query,
