@@ -42,6 +42,9 @@ export const playerMixin = {
     iconMode () {
       return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
     },
+    modeText () {
+      return this.mode === playMode.sequence ? '顺序播放' : this.mode === playMode.random ? '随机播放' : '单曲循环'
+    },
     ...mapGetters([
       'sequenceList',
       'playlist',
@@ -60,6 +63,9 @@ export const playerMixin = {
       } else {
         list = this.sequenceList
       }
+      // 展示提示框显示当前播放状态
+      this.$refs.topTip.show()
+
       this.resetCurrentIndex(list)
       this.setPlaylist(list)
     },

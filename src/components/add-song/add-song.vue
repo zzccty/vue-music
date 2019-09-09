@@ -92,7 +92,7 @@ export default {
       switches: [{
         name: '最近播放'
       }, {
-        name: '播放历史'
+        name: '搜索历史'
       }]
     }
   },

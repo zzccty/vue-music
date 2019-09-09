@@ -63,7 +63,8 @@
                   :class="{'active': currentShow === 'cd'}">
             </span>
             <span class="dot"
-                  :class="{'active': currentShow === 'lyric'}"></span>
+                  :class="{'active': currentShow === 'lyric'}">
+            </span>
           </div>
           <div class="progress-wrapper">
             <span class="time time-l">{{format(currentTime)}}</span>
@@ -144,6 +145,11 @@
       </div>
     </transition>
     <play-list ref="playList"></play-list>
+    <top-tip ref="topTip">
+      <div class="tip-title">
+        <span class="text">{{modeText}}</span>
+      </div>
+    </top-tip>
     <audio :src="currentSong.url"
            ref="audio"
            @playing="ready"
@@ -165,9 +171,12 @@ import { playMode } from 'common/js/config'
 import Lyric from 'lyric-parser'
 import Scroll from 'base/scroll/scroll'
 import PlayList from 'components/playlist/playlist'
+import TopTip from 'base/top-tip/top-tip'
 import { playerMixin } from 'common/js/mixin'
+
 const transform = prefixStyle('transform')
 const transitionDuration = prefixStyle('transitionDuration')
+
 export default {
   mixins: [playerMixin],
   data () {
@@ -386,20 +395,27 @@ export default {
     },
     middleTouchStart (e) {
       this.touch.initiated = true
-      this.touch.startX = e.touches[0].pageX
-      this.touch.startY = e.touches[0].pageY
+      // 用来判断是否是一次移动
+      this.touch.moved = false
+      const touch = e.touches[0]
+      this.touch.startX = touch.pageX
+      this.touch.startY = touch.pageY
     },
     middleTouchMove (e) {
       if (!this.touch.initiated) {
         return
       }
-      const detalX = e.touches[0].pageX - this.touch.startX
-      const detalY = e.touches[0].pageY - this.touch.startY
-      if (Math.abs(detalY) > Math.abs(detalX)) {
+      const touch = e.touches[0]
+      const deltaX = touch.pageX - this.touch.startX
+      const deltaY = touch.pageY - this.touch.startY
+      if (Math.abs(deltaY) > Math.abs(deltaX)) {
         return
       }
+      if (!this.touch.moved) {
+        this.touch.moved = true
+      }
       const left = this.currentShow === 'cd' ? 0 : -window.innerWidth
-      const offsetWidth = Math.min(0, Math.max(-window.innerWidth, left + detalX))
+      const offsetWidth = Math.min(0, Math.max(-window.innerWidth, left + deltaX))
       this.touch.percent = Math.abs(offsetWidth / window.innerWidth)
       this.$refs.lyricList.$el.style[transform] = `translate3d(${offsetWidth}px,0,0)`
       this.$refs.lyricList.$el.style[transitionDuration] = 0
@@ -407,6 +423,9 @@ export default {
       this.$refs.middleL.style[transitionDuration] = 0
     },
     middleTouchEnd () {
+      if (!this.touch.moved) {
+        return
+      }
       let offsetWidth
       let opacity
       if (this.currentShow === 'cd') {
@@ -433,6 +452,7 @@ export default {
       this.$refs.lyricList.$el.style[transitionDuration] = `${time}ms`
       this.$refs.middleL.style.opacity = opacity
       this.$refs.middleL.style[transitionDuration] = `${time}ms`
+      this.touch.initiated = false
     },
     showPlaylist () {
       this.$refs.playList.show()
@@ -507,7 +527,8 @@ export default {
     ProgressBar,
     ProgressCircle,
     Scroll,
-    PlayList
+    PlayList,
+    TopTip
   }
 }
 </script>
@@ -573,6 +594,7 @@ export default {
           display: inline-block
           vertical-align: top
           position: relative
+          top: 30px
           width: 100%
           height: 0
           padding-top: 80%
@@ -602,13 +624,13 @@ export default {
                 border: 10px solid rgba(255, 255, 255, 0.1)
           .playing-lyric-wrapper
             width: 80%
-            margin: 60px auto 0 auto
+            margin: 30px auto 0 auto
             overflow: hidden
             text-align: center
             .playing-lyric
               height: 20px
               line-height: 20px
-              font-size: $font-size-medium-x
+              font-size: $font-size-medium
               color: $color-text-l
         .middle-r
           display: inline-block
@@ -624,7 +646,7 @@ export default {
             .text
               line-height: 32px
               color: $color-text-l
-              font-size: $font-size-medium-x
+              font-size: $font-size-medium
               &.current
                 color: $color-text
             .pure-music
@@ -634,7 +656,7 @@ export default {
               font-size: $font-size-medium
       .bottom
         position: absolute
-        bottom: 50px
+        bottom: 30px
         width: 100%
         .dot-wrapper
           text-align: center
@@ -756,7 +778,21 @@ export default {
           position: absolute
           left: 0
           top: 0
-
+    .top-tip
+      position: fixed
+      top: 50%
+      width: 30%
+      z-index: 500
+      left: 50%
+      transform: translate(-50%,-50%)
+      background: $color-background-dd
+      border-radius: 10px
+      .tip-title
+        text-align: center
+        padding: 14px 0
+        .text
+          font-size: $font-size-medium
+          color: $color-text
   @keyframes rotate
     0%
       transform: rotate(0)
